@@ -4,13 +4,14 @@ struct _6502
 {
     struct registers
     {
-        uint8_t A;
-        uint8_t X;
-        uint8_t Y;
-        uint8_t SP;
-        uint8_t P;
+        uint8_t a;
+        uint8_t x;
+        uint8_t y;
+        uint8_t sp;
+        uint8_t p;
     };
 
-    
+    struct opcodes
+
 
 };
