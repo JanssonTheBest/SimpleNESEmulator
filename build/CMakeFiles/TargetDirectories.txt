@@ -1,0 +1,3 @@
+/home/kwisty/repos/SimpleNESEmulator/build/CMakeFiles/SimpleNesEmulator.dir
+/home/kwisty/repos/SimpleNESEmulator/build/CMakeFiles/edit_cache.dir
+/home/kwisty/repos/SimpleNESEmulator/build/CMakeFiles/rebuild_cache.dir
