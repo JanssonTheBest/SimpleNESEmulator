@@ -1,1 +1,1 @@
-/usr/bin/gcc -g CMakeFiles/SimpleNesEmulator.dir/src/core/cpu.c.o CMakeFiles/SimpleNesEmulator.dir/src/emulation/emulate.c.o CMakeFiles/SimpleNesEmulator.dir/src/main.c.o -o SimpleNesEmulator 
+/usr/bin/gcc -g CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/6502.c.o CMakeFiles/SimpleNesEmulator.dir/src/emulation/emulate.c.o CMakeFiles/SimpleNesEmulator.dir/src/main.c.o -o SimpleNesEmulator 

@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/kwisty/repos/SimpleNESEmulator/src/core/cpu.c" "CMakeFiles/SimpleNesEmulator.dir/src/core/cpu.c.o" "gcc" "CMakeFiles/SimpleNesEmulator.dir/src/core/cpu.c.o.d"
+  "/home/kwisty/repos/SimpleNESEmulator/src/core/cpu/6502.c" "CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/6502.c.o" "gcc" "CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/6502.c.o.d"
   "/home/kwisty/repos/SimpleNESEmulator/src/emulation/emulate.c" "CMakeFiles/SimpleNesEmulator.dir/src/emulation/emulate.c.o" "gcc" "CMakeFiles/SimpleNesEmulator.dir/src/emulation/emulate.c.o.d"
   "/home/kwisty/repos/SimpleNESEmulator/src/main.c" "CMakeFiles/SimpleNesEmulator.dir/src/main.c.o" "gcc" "CMakeFiles/SimpleNesEmulator.dir/src/main.c.o.d"
   )

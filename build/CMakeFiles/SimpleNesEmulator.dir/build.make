@@ -69,19 +69,19 @@ include CMakeFiles/SimpleNesEmulator.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/SimpleNesEmulator.dir/flags.make
 
-CMakeFiles/SimpleNesEmulator.dir/src/core/cpu.c.o: CMakeFiles/SimpleNesEmulator.dir/flags.make
-CMakeFiles/SimpleNesEmulator.dir/src/core/cpu.c.o: /home/kwisty/repos/SimpleNESEmulator/src/core/cpu.c
-CMakeFiles/SimpleNesEmulator.dir/src/core/cpu.c.o: CMakeFiles/SimpleNesEmulator.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/kwisty/repos/SimpleNESEmulator/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/SimpleNesEmulator.dir/src/core/cpu.c.o"
-	/usr/bin/gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/SimpleNesEmulator.dir/src/core/cpu.c.o -MF CMakeFiles/SimpleNesEmulator.dir/src/core/cpu.c.o.d -o CMakeFiles/SimpleNesEmulator.dir/src/core/cpu.c.o -c /home/kwisty/repos/SimpleNESEmulator/src/core/cpu.c
+CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/6502.c.o: CMakeFiles/SimpleNesEmulator.dir/flags.make
+CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/6502.c.o: /home/kwisty/repos/SimpleNESEmulator/src/core/cpu/6502.c
+CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/6502.c.o: CMakeFiles/SimpleNesEmulator.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/kwisty/repos/SimpleNESEmulator/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/6502.c.o"
+	/usr/bin/gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/6502.c.o -MF CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/6502.c.o.d -o CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/6502.c.o -c /home/kwisty/repos/SimpleNESEmulator/src/core/cpu/6502.c
 
-CMakeFiles/SimpleNesEmulator.dir/src/core/cpu.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/SimpleNesEmulator.dir/src/core/cpu.c.i"
-	/usr/bin/gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/kwisty/repos/SimpleNESEmulator/src/core/cpu.c > CMakeFiles/SimpleNesEmulator.dir/src/core/cpu.c.i
+CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/6502.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/6502.c.i"
+	/usr/bin/gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/kwisty/repos/SimpleNESEmulator/src/core/cpu/6502.c > CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/6502.c.i
 
-CMakeFiles/SimpleNesEmulator.dir/src/core/cpu.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/SimpleNesEmulator.dir/src/core/cpu.c.s"
-	/usr/bin/gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/kwisty/repos/SimpleNESEmulator/src/core/cpu.c -o CMakeFiles/SimpleNesEmulator.dir/src/core/cpu.c.s
+CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/6502.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/6502.c.s"
+	/usr/bin/gcc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/kwisty/repos/SimpleNESEmulator/src/core/cpu/6502.c -o CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/6502.c.s
 
 CMakeFiles/SimpleNesEmulator.dir/src/emulation/emulate.c.o: CMakeFiles/SimpleNesEmulator.dir/flags.make
 CMakeFiles/SimpleNesEmulator.dir/src/emulation/emulate.c.o: /home/kwisty/repos/SimpleNESEmulator/src/emulation/emulate.c
@@ -113,14 +113,14 @@ CMakeFiles/SimpleNesEmulator.dir/src/main.c.s: cmake_force
 
 # Object files for target SimpleNesEmulator
 SimpleNesEmulator_OBJECTS = \
-"CMakeFiles/SimpleNesEmulator.dir/src/core/cpu.c.o" \
+"CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/6502.c.o" \
 "CMakeFiles/SimpleNesEmulator.dir/src/emulation/emulate.c.o" \
 "CMakeFiles/SimpleNesEmulator.dir/src/main.c.o"
 
 # External object files for target SimpleNesEmulator
 SimpleNesEmulator_EXTERNAL_OBJECTS =
 
-SimpleNesEmulator: CMakeFiles/SimpleNesEmulator.dir/src/core/cpu.c.o
+SimpleNesEmulator: CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/6502.c.o
 SimpleNesEmulator: CMakeFiles/SimpleNesEmulator.dir/src/emulation/emulate.c.o
 SimpleNesEmulator: CMakeFiles/SimpleNesEmulator.dir/src/main.c.o
 SimpleNesEmulator: CMakeFiles/SimpleNesEmulator.dir/build.make

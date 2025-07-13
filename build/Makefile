@@ -130,29 +130,29 @@ SimpleNesEmulator/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/SimpleNesEmulator.dir/build.make CMakeFiles/SimpleNesEmulator.dir/build
 .PHONY : SimpleNesEmulator/fast
 
-src/core/cpu.o: src/core/cpu.c.o
-.PHONY : src/core/cpu.o
+src/core/cpu/6502.o: src/core/cpu/6502.c.o
+.PHONY : src/core/cpu/6502.o
 
 # target to build an object file
-src/core/cpu.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SimpleNesEmulator.dir/build.make CMakeFiles/SimpleNesEmulator.dir/src/core/cpu.c.o
-.PHONY : src/core/cpu.c.o
+src/core/cpu/6502.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SimpleNesEmulator.dir/build.make CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/6502.c.o
+.PHONY : src/core/cpu/6502.c.o
 
-src/core/cpu.i: src/core/cpu.c.i
-.PHONY : src/core/cpu.i
+src/core/cpu/6502.i: src/core/cpu/6502.c.i
+.PHONY : src/core/cpu/6502.i
 
 # target to preprocess a source file
-src/core/cpu.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SimpleNesEmulator.dir/build.make CMakeFiles/SimpleNesEmulator.dir/src/core/cpu.c.i
-.PHONY : src/core/cpu.c.i
+src/core/cpu/6502.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SimpleNesEmulator.dir/build.make CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/6502.c.i
+.PHONY : src/core/cpu/6502.c.i
 
-src/core/cpu.s: src/core/cpu.c.s
-.PHONY : src/core/cpu.s
+src/core/cpu/6502.s: src/core/cpu/6502.c.s
+.PHONY : src/core/cpu/6502.s
 
 # target to generate assembly for a file
-src/core/cpu.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SimpleNesEmulator.dir/build.make CMakeFiles/SimpleNesEmulator.dir/src/core/cpu.c.s
-.PHONY : src/core/cpu.c.s
+src/core/cpu/6502.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SimpleNesEmulator.dir/build.make CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/6502.c.s
+.PHONY : src/core/cpu/6502.c.s
 
 src/emulation/emulate.o: src/emulation/emulate.c.o
 .PHONY : src/emulation/emulate.o
@@ -211,9 +211,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... SimpleNesEmulator"
-	@echo "... src/core/cpu.o"
-	@echo "... src/core/cpu.i"
-	@echo "... src/core/cpu.s"
+	@echo "... src/core/cpu/6502.o"
+	@echo "... src/core/cpu/6502.i"
+	@echo "... src/core/cpu/6502.s"
 	@echo "... src/emulation/emulate.o"
 	@echo "... src/emulation/emulate.i"
 	@echo "... src/emulation/emulate.s"

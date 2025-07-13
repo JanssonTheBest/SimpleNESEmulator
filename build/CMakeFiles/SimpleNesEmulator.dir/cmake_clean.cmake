@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/SimpleNesEmulator.dir/src/core/cpu.c.o"
-  "CMakeFiles/SimpleNesEmulator.dir/src/core/cpu.c.o.d"
+  "CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/6502.c.o"
+  "CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/6502.c.o.d"
   "CMakeFiles/SimpleNesEmulator.dir/src/emulation/emulate.c.o"
   "CMakeFiles/SimpleNesEmulator.dir/src/emulation/emulate.c.o.d"
   "CMakeFiles/SimpleNesEmulator.dir/src/main.c.o"
