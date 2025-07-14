@@ -1,9 +1,21 @@
 #include <stdint.h>
 #include "6502.h"
 
-int initialize(void)
+int initialize(uint8_t)
 {
 }
+
+uint8_t clock_count = 0;
+int cpu_step()
+{
+    if (clock_count == 0)
+    {
+
+    }
+    clock_count--;
+}
+
+
 
 uint8_t a;
 uint8_t x;
@@ -11,6 +23,16 @@ uint8_t pc;
 uint8_t y;
 uint8_t sp;
 uint8_t p;
+
+typedef struct opcode
+{
+    char name[4];
+    uint8_t byte_length;
+    uint8_t base_cycle_count;
+    uint8_t (*addressing_mode)(void);
+    uint8_t (*operate)(void);
+
+} opcode;
 
 opcode opcode_table[0x100] = {
     // ADC
@@ -223,298 +245,298 @@ opcode opcode_table[0x100] = {
 };
 
 // val = PEEK((arg + X) % 256)
-void addressing_zero_page_indexed_x()
+uint8_t addressing_zero_page_indexed_x()
 {
 }
 // val = PEEK((arg + Y) % 256)
-void addressing_zero_page_indexed_y()
+uint8_t addressing_zero_page_indexed_y()
 {
 }
 // val = PEEK(arg + X)
-void addressing_absolute_indexed_x()
+uint8_t addressing_absolute_indexed_x()
 {
 }
 // val = PEEK(arg + Y)
-void addressing_absolute_indexed_y()
+uint8_t addressing_absolute_indexed_y()
 {
 }
 // val = PEEK(PEEK((arg + X) % 256) + PEEK((arg + X + 1) % 256) * 256)
-void addressing_indexed_indirect_x()
+uint8_t addressing_indexed_indirect_x()
 {
 }
 // val = PEEK(PEEK(arg) + PEEK((arg + 1) % 256) * 256 + Y)
-void addressing_indirect_indexed_y()
+uint8_t addressing_indirect_indexed_y()
 {
 }
 // Many instructions can operate on the accumulator, e.g. LSR A. Some assemblers will treat no operand as an implicit A where applicable.
-void addressing_accumulator()
+uint8_t addressing_accumulator()
 {
 }
 // Uses the 8-bit operand itself as the value for the operation, rather than fetching a value from a memory address.
-void addressing_immediate()
+uint8_t addressing_immediate()
 {
 }
 // Fetches the value from an 8-bit address on the zero page.
-void addressing_zero_page()
+uint8_t addressing_zero_page()
 {
 }
 // Fetches the value from a 16-bit address anywhere in memory.
-void addressing_absolute()
+uint8_t addressing_absolute()
 {
 }
 // Branch instructions (e.g. BEQ, BCS) have a relative addressing mode that specifies an 8-bit signed offset relative to the current PC.
-void addressing_relative()
+uint8_t addressing_relative()
 {
 }
 // The JMP instruction has a special indirect addressing mode that can jump to the address stored in a 16-bit pointer anywhere in memory.
-void addressing_indirect()
+uint8_t addressing_indirect()
 {
 }
 // Instructions like RTS or CLC have no address operand, the destination of results are implied.
-void addressing_implied()
+uint8_t addressing_implied()
 {
 }
 //
 
 // Add with Carry: A = A + memory + C
-void adc()
+uint8_t adc()
 {
 }
 // Bitwise AND: A = A & memory
-void and()
+uint8_t and()
 {
 }
 // Arithmetic Shift Left: value = value << 1, or visually: C <- [76543210] <- 0
-void asl()
+uint8_t asl()
 {
 }
 // Branch if Carry Clear: PC = PC + 2 + memory (signed)
-void bcc()
+uint8_t bcc()
 {
 }
 // Branch if Carry Set: PC = PC + 2 + memory (signed)
-void bcs()
+uint8_t bcs()
 {
 }
 // Branch if Equal: PC = PC + 2 + memory (signed)
-void beq()
+uint8_t beq()
 {
 }
 // Bit Test: A & memory
-void bit()
+uint8_t bit()
 {
 }
 // Branch if Minus: PC = PC + 2 + memory (signed)
-void bmi()
+uint8_t bmi()
 {
 }
 // Branch if Not Equal: PC = PC + 2 + memory (signed)
-void bne()
+uint8_t bne()
 {
 }
 // Branch if Plus: PC = PC + 2 + memory (signed)
-void bpl()
+uint8_t bpl()
 {
 }
 // Break (software IRQ):
 // push PC + 2 to stack
 // push NV11DIZC flags to stack
 // PC = ($FFFE)
-void brk()
+uint8_t brk()
 {
 }
 // Branch if Overflow Clear: PC = PC + 2 + memory (signed)
-void bvc()
+uint8_t bvc()
 {
 }
 // Branch if Overflow Set: PC = PC + 2 + memory (signed)
-void bvs()
+uint8_t bvs()
 {
 }
 // Clear Carry: C = 0
-void clc()
+uint8_t clc()
 {
 }
 // Clear Decimal: D = 0
-void cld()
+uint8_t cld()
 {
 }
 // Clear Interrupt Disable: I = 0
-void cli()
+uint8_t cli()
 {
 }
 // Clear Overflow: V = 0
-void clv()
+uint8_t clv()
 {
 }
 // Compare A: A - memory
-void cmp()
+uint8_t cmp()
 {
 }
 // Compare X: X - memory
-void cpx()
+uint8_t cpx()
 {
 }
 // Compate Y: Y-memory
-void cpy()
+uint8_t cpy()
 {
 }
 // Decrement Memory: memory = memory - 1
-void dec()
+uint8_t dec()
 {
 }
 // Decrement X: X = X - 1
-void dex()
+uint8_t dex()
 {
 }
 // Decrement Y: Y = Y - 1
-void dey()
+uint8_t dey()
 {
 }
 // Bitwise Exclusive OR: A = A ^ memory
-void eor()
+uint8_t eor()
 {
 }
 // Increment Memory: memory = memory + 1
-void inc()
+uint8_t inc()
 {
 }
 // Increment X: X = X + 1
-void inx()
+uint8_t inx()
 {
 }
 // Increment Y: Y = Y + 1
-void iny()
+uint8_t iny()
 {
 }
 // Jump: PC = memory
-void jmp()
+uint8_t jmp()
 {
 }
 // Jump to Subroutine:
 // push PC + 2 to stack
 // PC = memory
-void jsr()
+uint8_t jsr()
 {
 }
 // Load A: A = memory
-void lda()
+uint8_t lda()
 {
 }
 // Load X: X = memory
-void ldx()
+uint8_t ldx()
 {
 }
 // Load Y: Y = memory
-void ldy()
+uint8_t ldy()
 {
 }
 // Logical Shift Right: value = value >> 1, or visually: 0 -> [76543210] -> C
-void lsr()
+uint8_t lsr()
 {
 }
 // No Operation: NOP has no effect; it wastes space and CPU cycles.
-void nop()
+uint8_t nop()
 {
 }
 // Bitwise OR: A = A | memory
-void ora()
+uint8_t ora()
 {
 }
 // Push A:
 //($0100 + SP) = A
 // SP = SP - 1
-void pha()
+uint8_t pha()
 {
 }
 // Push Processor Status:
 //($0100 + SP) = NV11DIZC
 // SP = SP - 1
-void php()
+uint8_t php()
 {
 }
 // Pull A:
 // SP = SP + 1
 // A = ($0100 + SP)
-void pla()
+uint8_t pla()
 {
 }
 // Pull Processor Status:
 // SP = SP + 1
 // NVxxDIZC = ($0100 + SP)
-void plp()
+uint8_t plp()
 {
 }
 // Rotate Left: value = value << 1 through C, or visually: C <- [76543210] <- C
-void rol()
+uint8_t rol()
 {
 }
 // Rotate Right: value = value >> 1 through C, or visually: C -> [76543210] -> C
-void ror()
+uint8_t ror()
 {
 }
 // Return from Interrupt:
 // pull NVxxDIZC flags from stack
 // pull PC from stack
-void rti()
+uint8_t rti()
 {
 }
 // Return from Subroutine:
 // pull PC from stack
 // PC = PC + 1
-void rts()
+uint8_t rts()
 {
 }
 // Subtract with Carry: A = A - memory - ~C, or equivalently: A = A + ~memory + C
-void sbc()
+uint8_t sbc()
 {
 }
 // Set Carry: C = 1
-void sec()
+uint8_t sec()
 {
 }
 // Set Decimal: D = 1
-void sed()
+uint8_t sed()
 {
 }
 // Set Interrupt Disable: I = 1
-void sei()
+uint8_t sei()
 {
 }
 // Store A: memory = A
-void sta()
+uint8_t sta()
 {
 }
 // Store X: memory = X
-void stx()
+uint8_t stx()
 {
 }
 // Store Y: memory = Y
-void sty()
+uint8_t sty()
 {
 }
 // Transfer A to X: X = A
-void tax()
+uint8_t tax()
 {
 }
 // Transfer A to Y: Y = A
-void tay()
+uint8_t tay()
 {
 }
 // Transfer Stack Pointer to X: X = SP
-void tsx()
+uint8_t tsx()
 {
 }
 // Transfer X to A: A = X
-void txa()
+uint8_t txa()
 {
 }
 // Transfer X to Stack Pointer: SP = X
-void txs()
+uint8_t txs()
 {
 }
 // Transfer Y to A: A = Y
-void tya()
+uint8_t tya()
 {
 }
 
