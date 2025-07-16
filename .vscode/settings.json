@@ -8,6 +8,7 @@
   },
   "files.associations": {
     "stdint.h": "c",
-    "6502.h": "c"
+    "6502.h": "c",
+    "compare": "c"
   }
 }

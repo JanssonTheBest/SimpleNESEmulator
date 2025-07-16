@@ -1,8 +1,8 @@
 #include <stdint.h>
-#include "cpu_6502.h"
 #include "cpu_bus.h"
+#include "cpu_6502.h"
 
-cpu_6502 cpu_init(cpu_bus bus)
+cpu_6502 cpu_init(cpu_bus *bus)
 {
     cpu_6502 cpu = {
         .cpu_step_func = &cpu_step,
@@ -11,11 +11,17 @@ cpu_6502 cpu_init(cpu_bus bus)
     return cpu;
 }
 
-int cpu_step(cpu_6502 *cpu)
+void cpu_step(cpu_6502 *cpu)
 {
     if (cpu->clock_count == 0)
     {
-        
+        uint8_t value = cpu->cpu_bus->read_func(cpu->reg_pc);
+        cpu->reg_pc++;
+        cpu->fetched = value;
+        opcode opcode = opcode_table[value];
+        opcode.addressing_mode(cpu);
+        cpu->clock_count = opcode.base_cycle_count;
+        cpu->clock_count += opcode.operate(cpu);
     }
     cpu->clock_count--;
 }
@@ -25,8 +31,8 @@ typedef struct opcode
     char name[4];
     uint8_t byte_length;
     uint8_t base_cycle_count;
-    uint8_t (*addressing_mode)(cpu_6502);
-    uint8_t (*operate)(cpu_6502);
+    uint8_t (*addressing_mode)(cpu_6502 *);
+    uint8_t (*operate)(cpu_6502 *);
 
 } opcode;
 
@@ -240,57 +246,106 @@ opcode opcode_table[0x100] = {
     [0x98] = {"TYA", 1, 2, &addressing_implied, &tya},
 };
 
-// val = PEEK((arg + X) % 256)
-uint8_t addressing_zero_page_indexed_x(cpu_6502 *cpu)
+uint16_t pc_read_u16(cpu_6502 *cpu)
 {
+    uint8_t lo = cpu->cpu_bus->read_func(cpu->reg_pc, cpu->cpu_bus);
+    cpu->reg_pc++;
+    uint8_t hi = lo = cpu->cpu_bus->read_func(cpu->reg_pc, cpu->cpu_bus);
+    cpu->reg_pc++;
+    uint16_t u16 = (hi << 8) | lo;
+    return u16;
+}
+
+uint16_t pc_read_u8(cpu_6502 *cpu)
+{
+    uint8_t u8 = cpu->cpu_bus->read_func(cpu->reg_pc, cpu->cpu_bus);
+    cpu->reg_pc++;
+    return u8;
+}
+
+// val = PEEK((arg + X) % 256)
+void addressing_zero_page_indexed_x(cpu_6502 *cpu)
+{
+    uint8_t arg = pc_read_u8(cpu);
+    cpu->reg_pc++;
+    uint16_t effective_address = (arg + cpu->reg_x) & 0x00FF;
+    cpu->fetched = cpu->cpu_bus->read_func(effective_address, cpu->cpu_bus);
+    cpu->page_crossed = false;
 }
 // val = PEEK((arg + Y) % 256)
-uint8_t addressing_zero_page_indexed_y(cpu_6502 *cpu)
+void addressing_zero_page_indexed_y(cpu_6502 *cpu)
 {
+    uint8_t arg = pc_read_u8(cpu);
+    cpu->reg_pc++;
+    uint16_t effective_addr = (arg + cpu->reg_y) & 0x00FF;
+    cpu->fetched = cpu->cpu_bus->read_func(effective_addr, cpu->cpu_bus);
+    cpu->page_crossed = false;
 }
 // val = PEEK(arg + X)
-uint8_t addressing_absolute_indexed_x(cpu_6502 *cpu)
+void addressing_absolute_indexed_x(cpu_6502 *cpu)
 {
+    uint16_t arg = pc_read_u16(cpu);
+    uint16_t effective_addr = (arg + cpu->reg_x);
+    cpu->fetched = cpu->cpu_bus->read_func(effective_addr, cpu->cpu_bus);
+    cpu->page_crossed = ((effective_addr & 0xFF00) != (arg & 0xFF00));
 }
 // val = PEEK(arg + Y)
-uint8_t addressing_absolute_indexed_y(cpu_6502 *cpu)
+void addressing_absolute_indexed_y(cpu_6502 *cpu)
 {
+    uint16_t arg = pc_read_u16(cpu);
+    uint16_t effective_addr = (arg + cpu->reg_y);
+    cpu->fetched = cpu->cpu_bus->read_func(effective_addr, cpu->cpu_bus);
+    cpu->page_crossed = ((effective_addr & 0xFF00) != (arg & 0xFF00));
 }
 // val = PEEK(PEEK((arg + X) % 256) + PEEK((arg + X + 1) % 256) * 256)
-uint8_t addressing_indexed_indirect_x(cpu_6502 *cpu)
+void addressing_indexed_indirect_x(cpu_6502 *cpu)
 {
+    uint8_t arg = pc_read_u8(cpu);
+    uint8_t lo = cpu->cpu_bus->read_func((arg + cpu->reg_x) & 0x00FF, cpu->cpu_bus);
+    uint8_t hi = cpu->cpu_bus->read_func((arg + cpu->reg_x + 0x0001) & 0x00FF, cpu->cpu_bus);
+    uint16_t effective_addr = (hi << 8) | lo;
+    cpu->fetched = cpu->cpu_bus->read_func(effective_addr, cpu->cpu_bus);
+    cpu->page_crossed = false;
 }
 // val = PEEK(PEEK(arg) + PEEK((arg + 1) % 256) * 256 + Y)
-uint8_t addressing_indirect_indexed_y(cpu_6502 *cpu)
+void addressing_indirect_indexed_y(cpu_6502 *cpu)
 {
+    uint8_t val = pc_read_u8(cpu);
+    uint8_t lo = cpu->cpu_bus->read_func(val, cpu->cpu_bus);
+    uint8_t hi = cpu->cpu_bus->read_func((val + 0x0001)&0x00FF, cpu->cpu_bus);
+    uint16_t arg = (hi << 8) | lo;
+    uint16_t effective_addr = arg + cpu->reg_y;
+    cpu->fetched = cpu->cpu_bus->read_func(effective_addr, cpu->cpu_bus);
+    cpu->page_crossed = ((effective_addr & 0xFF00) != (arg & 0xFF00));
 }
 // Many instructions can operate on the accumulator, e.g. LSR A. Some assemblers will treat no operand as an implicit A where applicable.
-uint8_t addressing_accumulator(cpu_6502 *cpu)
+void addressing_accumulator(cpu_6502 *cpu)
 {
 }
 // Uses the 8-bit operand itself as the value for the operation, rather than fetching a value from a memory address.
-uint8_t addressing_immediate(cpu_6502 *cpu)
+void addressing_immediate(cpu_6502 *cpu)
 {
 }
 // Fetches the value from an 8-bit address on the zero page.
-uint8_t addressing_zero_page(cpu_6502 *cpu)
+void addressing_zero_page(cpu_6502 *cpu)
 {
 }
 // Fetches the value from a 16-bit address anywhere in memory.
-uint8_t addressing_absolute(cpu_6502 *cpu)
+void addressing_absolute(cpu_6502 *cpu)
 {
 }
 // Branch instructions (e.g. BEQ, BCS) have a relative addressing mode that specifies an 8-bit signed offset relative to the current PC.
-uint8_t addressing_relative(cpu_6502 *cpu)
+void addressing_relative(cpu_6502 *cpu)
 {
 }
 // The JMP instruction has a special indirect addressing mode that can jump to the address stored in a 16-bit pointer anywhere in memory.
-uint8_t addressing_indirect(cpu_6502 *cpu)
+void addressing_indirect(cpu_6502 *cpu)
 {
 }
 // Instructions like RTS or CLC have no address operand, the destination of results are implied.
-uint8_t addressing_implied(cpu_6502 *cpu)
+void addressing_implied(cpu_6502 *cpu)
 {
+    // Do nothing
 }
 //
 

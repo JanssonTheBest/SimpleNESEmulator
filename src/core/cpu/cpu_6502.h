@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stdbool.h>
 
 #pragma once
 
@@ -19,11 +20,14 @@ typedef struct
     uint8_t flag_negative;
     const uint8_t flag_unused;
 
+    uint16_t address_bus;
     cpu_bus *cpu_bus;
     
     uint8_t clock_count;
+    uint8_t fetched;
+    bool page_crossed;
 
-    int (*cpu_step_func)(cpu_6502*);
+    void (*cpu_step_func)(cpu_6502*);
 } cpu_6502;
 
 cpu_6502 cpu_init(cpu_bus bus);
