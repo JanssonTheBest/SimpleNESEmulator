@@ -1,36 +1,32 @@
 #include <stdint.h>
-#include "6502.h"
+#include "cpu_6502.h"
+#include "cpu_bus.h"
 
-int initialize(uint8_t)
+cpu_6502 cpu_init(cpu_bus bus)
 {
+    cpu_6502 cpu = {
+        .cpu_step_func = &cpu_step,
+        .cpu_bus = bus,
+    };
+    return cpu;
 }
 
-uint8_t clock_count = 0;
-int cpu_step()
+int cpu_step(cpu_6502 *cpu)
 {
-    if (clock_count == 0)
+    if (cpu->clock_count == 0)
     {
-
+        
     }
-    clock_count--;
+    cpu->clock_count--;
 }
-
-
-
-uint8_t a;
-uint8_t x;
-uint8_t pc;
-uint8_t y;
-uint8_t sp;
-uint8_t p;
 
 typedef struct opcode
 {
     char name[4];
     uint8_t byte_length;
     uint8_t base_cycle_count;
-    uint8_t (*addressing_mode)(void);
-    uint8_t (*operate)(void);
+    uint8_t (*addressing_mode)(cpu_6502);
+    uint8_t (*operate)(cpu_6502);
 
 } opcode;
 
@@ -245,298 +241,298 @@ opcode opcode_table[0x100] = {
 };
 
 // val = PEEK((arg + X) % 256)
-uint8_t addressing_zero_page_indexed_x()
+uint8_t addressing_zero_page_indexed_x(cpu_6502 *cpu)
 {
 }
 // val = PEEK((arg + Y) % 256)
-uint8_t addressing_zero_page_indexed_y()
+uint8_t addressing_zero_page_indexed_y(cpu_6502 *cpu)
 {
 }
 // val = PEEK(arg + X)
-uint8_t addressing_absolute_indexed_x()
+uint8_t addressing_absolute_indexed_x(cpu_6502 *cpu)
 {
 }
 // val = PEEK(arg + Y)
-uint8_t addressing_absolute_indexed_y()
+uint8_t addressing_absolute_indexed_y(cpu_6502 *cpu)
 {
 }
 // val = PEEK(PEEK((arg + X) % 256) + PEEK((arg + X + 1) % 256) * 256)
-uint8_t addressing_indexed_indirect_x()
+uint8_t addressing_indexed_indirect_x(cpu_6502 *cpu)
 {
 }
 // val = PEEK(PEEK(arg) + PEEK((arg + 1) % 256) * 256 + Y)
-uint8_t addressing_indirect_indexed_y()
+uint8_t addressing_indirect_indexed_y(cpu_6502 *cpu)
 {
 }
 // Many instructions can operate on the accumulator, e.g. LSR A. Some assemblers will treat no operand as an implicit A where applicable.
-uint8_t addressing_accumulator()
+uint8_t addressing_accumulator(cpu_6502 *cpu)
 {
 }
 // Uses the 8-bit operand itself as the value for the operation, rather than fetching a value from a memory address.
-uint8_t addressing_immediate()
+uint8_t addressing_immediate(cpu_6502 *cpu)
 {
 }
 // Fetches the value from an 8-bit address on the zero page.
-uint8_t addressing_zero_page()
+uint8_t addressing_zero_page(cpu_6502 *cpu)
 {
 }
 // Fetches the value from a 16-bit address anywhere in memory.
-uint8_t addressing_absolute()
+uint8_t addressing_absolute(cpu_6502 *cpu)
 {
 }
 // Branch instructions (e.g. BEQ, BCS) have a relative addressing mode that specifies an 8-bit signed offset relative to the current PC.
-uint8_t addressing_relative()
+uint8_t addressing_relative(cpu_6502 *cpu)
 {
 }
 // The JMP instruction has a special indirect addressing mode that can jump to the address stored in a 16-bit pointer anywhere in memory.
-uint8_t addressing_indirect()
+uint8_t addressing_indirect(cpu_6502 *cpu)
 {
 }
 // Instructions like RTS or CLC have no address operand, the destination of results are implied.
-uint8_t addressing_implied()
+uint8_t addressing_implied(cpu_6502 *cpu)
 {
 }
 //
 
 // Add with Carry: A = A + memory + C
-uint8_t adc()
+uint8_t adc(cpu_6502 *cpu)
 {
 }
 // Bitwise AND: A = A & memory
-uint8_t and()
+uint8_t and(cpu_6502 *cpu)
 {
 }
 // Arithmetic Shift Left: value = value << 1, or visually: C <- [76543210] <- 0
-uint8_t asl()
+uint8_t asl(cpu_6502 *cpu)
 {
 }
 // Branch if Carry Clear: PC = PC + 2 + memory (signed)
-uint8_t bcc()
+uint8_t bcc(cpu_6502 *cpu)
 {
 }
 // Branch if Carry Set: PC = PC + 2 + memory (signed)
-uint8_t bcs()
+uint8_t bcs(cpu_6502 *cpu)
 {
 }
 // Branch if Equal: PC = PC + 2 + memory (signed)
-uint8_t beq()
+uint8_t beq(cpu_6502 *cpu)
 {
 }
 // Bit Test: A & memory
-uint8_t bit()
+uint8_t bit(cpu_6502 *cpu)
 {
 }
 // Branch if Minus: PC = PC + 2 + memory (signed)
-uint8_t bmi()
+uint8_t bmi(cpu_6502 *cpu)
 {
 }
 // Branch if Not Equal: PC = PC + 2 + memory (signed)
-uint8_t bne()
+uint8_t bne(cpu_6502 *cpu)
 {
 }
 // Branch if Plus: PC = PC + 2 + memory (signed)
-uint8_t bpl()
+uint8_t bpl(cpu_6502 *cpu)
 {
 }
 // Break (software IRQ):
 // push PC + 2 to stack
 // push NV11DIZC flags to stack
 // PC = ($FFFE)
-uint8_t brk()
+uint8_t brk(cpu_6502 *cpu)
 {
 }
 // Branch if Overflow Clear: PC = PC + 2 + memory (signed)
-uint8_t bvc()
+uint8_t bvc(cpu_6502 *cpu)
 {
 }
 // Branch if Overflow Set: PC = PC + 2 + memory (signed)
-uint8_t bvs()
+uint8_t bvs(cpu_6502 *cpu)
 {
 }
 // Clear Carry: C = 0
-uint8_t clc()
+uint8_t clc(cpu_6502 *cpu)
 {
 }
 // Clear Decimal: D = 0
-uint8_t cld()
+uint8_t cld(cpu_6502 *cpu)
 {
 }
 // Clear Interrupt Disable: I = 0
-uint8_t cli()
+uint8_t cli(cpu_6502 *cpu)
 {
 }
 // Clear Overflow: V = 0
-uint8_t clv()
+uint8_t clv(cpu_6502 *cpu)
 {
 }
 // Compare A: A - memory
-uint8_t cmp()
+uint8_t cmp(cpu_6502 *cpu)
 {
 }
 // Compare X: X - memory
-uint8_t cpx()
+uint8_t cpx(cpu_6502 *cpu)
 {
 }
 // Compate Y: Y-memory
-uint8_t cpy()
+uint8_t cpy(cpu_6502 *cpu)
 {
 }
 // Decrement Memory: memory = memory - 1
-uint8_t dec()
+uint8_t dec(cpu_6502 *cpu)
 {
 }
 // Decrement X: X = X - 1
-uint8_t dex()
+uint8_t dex(cpu_6502 *cpu)
 {
 }
 // Decrement Y: Y = Y - 1
-uint8_t dey()
+uint8_t dey(cpu_6502 *cpu)
 {
 }
 // Bitwise Exclusive OR: A = A ^ memory
-uint8_t eor()
+uint8_t eor(cpu_6502 *cpu)
 {
 }
 // Increment Memory: memory = memory + 1
-uint8_t inc()
+uint8_t inc(cpu_6502 *cpu)
 {
 }
 // Increment X: X = X + 1
-uint8_t inx()
+uint8_t inx(cpu_6502 *cpu)
 {
 }
 // Increment Y: Y = Y + 1
-uint8_t iny()
+uint8_t iny(cpu_6502 *cpu)
 {
 }
 // Jump: PC = memory
-uint8_t jmp()
+uint8_t jmp(cpu_6502 *cpu)
 {
 }
 // Jump to Subroutine:
 // push PC + 2 to stack
 // PC = memory
-uint8_t jsr()
+uint8_t jsr(cpu_6502 *cpu)
 {
 }
 // Load A: A = memory
-uint8_t lda()
+uint8_t lda(cpu_6502 *cpu)
 {
 }
 // Load X: X = memory
-uint8_t ldx()
+uint8_t ldx(cpu_6502 *cpu)
 {
 }
 // Load Y: Y = memory
-uint8_t ldy()
+uint8_t ldy(cpu_6502 *cpu)
 {
 }
 // Logical Shift Right: value = value >> 1, or visually: 0 -> [76543210] -> C
-uint8_t lsr()
+uint8_t lsr(cpu_6502 *cpu)
 {
 }
 // No Operation: NOP has no effect; it wastes space and CPU cycles.
-uint8_t nop()
+uint8_t nop(cpu_6502 *cpu)
 {
 }
 // Bitwise OR: A = A | memory
-uint8_t ora()
+uint8_t ora(cpu_6502 *cpu)
 {
 }
 // Push A:
 //($0100 + SP) = A
 // SP = SP - 1
-uint8_t pha()
+uint8_t pha(cpu_6502 *cpu)
 {
 }
 // Push Processor Status:
 //($0100 + SP) = NV11DIZC
 // SP = SP - 1
-uint8_t php()
+uint8_t php(cpu_6502 *cpu)
 {
 }
 // Pull A:
 // SP = SP + 1
 // A = ($0100 + SP)
-uint8_t pla()
+uint8_t pla(cpu_6502 *cpu)
 {
 }
 // Pull Processor Status:
 // SP = SP + 1
 // NVxxDIZC = ($0100 + SP)
-uint8_t plp()
+uint8_t plp(cpu_6502 *cpu)
 {
 }
 // Rotate Left: value = value << 1 through C, or visually: C <- [76543210] <- C
-uint8_t rol()
+uint8_t rol(cpu_6502 *cpu)
 {
 }
 // Rotate Right: value = value >> 1 through C, or visually: C -> [76543210] -> C
-uint8_t ror()
+uint8_t ror(cpu_6502 *cpu)
 {
 }
 // Return from Interrupt:
 // pull NVxxDIZC flags from stack
 // pull PC from stack
-uint8_t rti()
+uint8_t rti(cpu_6502 *cpu)
 {
 }
 // Return from Subroutine:
 // pull PC from stack
 // PC = PC + 1
-uint8_t rts()
+uint8_t rts(cpu_6502 *cpu)
 {
 }
 // Subtract with Carry: A = A - memory - ~C, or equivalently: A = A + ~memory + C
-uint8_t sbc()
+uint8_t sbc(cpu_6502 *cpu)
 {
 }
 // Set Carry: C = 1
-uint8_t sec()
+uint8_t sec(cpu_6502 *cpu)
 {
 }
 // Set Decimal: D = 1
-uint8_t sed()
+uint8_t sed(cpu_6502 *cpu)
 {
 }
 // Set Interrupt Disable: I = 1
-uint8_t sei()
+uint8_t sei(cpu_6502 *cpu)
 {
 }
 // Store A: memory = A
-uint8_t sta()
+uint8_t sta(cpu_6502 *cpu)
 {
 }
 // Store X: memory = X
-uint8_t stx()
+uint8_t stx(cpu_6502 *cpu)
 {
 }
 // Store Y: memory = Y
-uint8_t sty()
+uint8_t sty(cpu_6502 *cpu)
 {
 }
 // Transfer A to X: X = A
-uint8_t tax()
+uint8_t tax(cpu_6502 *cpu)
 {
 }
 // Transfer A to Y: Y = A
-uint8_t tay()
+uint8_t tay(cpu_6502 *cpu)
 {
 }
 // Transfer Stack Pointer to X: X = SP
-uint8_t tsx()
+uint8_t tsx(cpu_6502 *cpu)
 {
 }
 // Transfer X to A: A = X
-uint8_t txa()
+uint8_t txa(cpu_6502 *cpu)
 {
 }
 // Transfer X to Stack Pointer: SP = X
-uint8_t txs()
+uint8_t txs(cpu_6502 *cpu)
 {
 }
 // Transfer Y to A: A = Y
-uint8_t tya()
+uint8_t tya(cpu_6502 *cpu)
 {
 }
 

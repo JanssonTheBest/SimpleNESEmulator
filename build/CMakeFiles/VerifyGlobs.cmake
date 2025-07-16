@@ -6,6 +6,7 @@ cmake_policy(SET CMP0009 NEW)
 file(GLOB_RECURSE NEW_GLOB LIST_DIRECTORIES false "/home/kwisty/repos/SimpleNESEmulator/src/*.c")
 set(OLD_GLOB
   "/home/kwisty/repos/SimpleNESEmulator/src/core/cpu/6502.c"
+  "/home/kwisty/repos/SimpleNESEmulator/src/core/cpu/cpu_bus.c"
   "/home/kwisty/repos/SimpleNESEmulator/src/emulation/emulate.c"
   "/home/kwisty/repos/SimpleNESEmulator/src/main.c"
   )

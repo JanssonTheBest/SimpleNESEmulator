@@ -7,6 +7,12 @@
 },
 {
   "directory": "/home/kwisty/repos/SimpleNESEmulator/build",
+  "command": "/usr/bin/gcc -I/home/kwisty/repos/SimpleNESEmulator/include -g -o CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/cpu_bus.c.o -c /home/kwisty/repos/SimpleNESEmulator/src/core/cpu/cpu_bus.c",
+  "file": "/home/kwisty/repos/SimpleNESEmulator/src/core/cpu/cpu_bus.c",
+  "output": "CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/cpu_bus.c.o"
+},
+{
+  "directory": "/home/kwisty/repos/SimpleNESEmulator/build",
   "command": "/usr/bin/gcc -I/home/kwisty/repos/SimpleNESEmulator/include -g -o CMakeFiles/SimpleNesEmulator.dir/src/emulation/emulate.c.o -c /home/kwisty/repos/SimpleNESEmulator/src/emulation/emulate.c",
   "file": "/home/kwisty/repos/SimpleNESEmulator/src/emulation/emulate.c",
   "output": "CMakeFiles/SimpleNesEmulator.dir/src/emulation/emulate.c.o"

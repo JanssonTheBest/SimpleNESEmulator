@@ -56,6 +56,13 @@ build CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/6502.c.o: C_COMPILER__Simple
   OBJECT_DIR = CMakeFiles/SimpleNesEmulator.dir
   OBJECT_FILE_DIR = CMakeFiles/SimpleNesEmulator.dir/src/core/cpu
 
+build CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/cpu_bus.c.o: C_COMPILER__SimpleNesEmulator_unscanned_Debug /home/kwisty/repos/SimpleNESEmulator/src/core/cpu/cpu_bus.c || cmake_object_order_depends_target_SimpleNesEmulator
+  DEP_FILE = CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/cpu_bus.c.o.d
+  FLAGS = -g
+  INCLUDES = -I/home/kwisty/repos/SimpleNESEmulator/include
+  OBJECT_DIR = CMakeFiles/SimpleNesEmulator.dir
+  OBJECT_FILE_DIR = CMakeFiles/SimpleNesEmulator.dir/src/core/cpu
+
 build CMakeFiles/SimpleNesEmulator.dir/src/emulation/emulate.c.o: C_COMPILER__SimpleNesEmulator_unscanned_Debug /home/kwisty/repos/SimpleNESEmulator/src/emulation/emulate.c || cmake_object_order_depends_target_SimpleNesEmulator
   DEP_FILE = CMakeFiles/SimpleNesEmulator.dir/src/emulation/emulate.c.o.d
   FLAGS = -g
@@ -78,7 +85,7 @@ build CMakeFiles/SimpleNesEmulator.dir/src/main.c.o: C_COMPILER__SimpleNesEmulat
 #############################################
 # Link the executable SimpleNesEmulator
 
-build SimpleNesEmulator: C_EXECUTABLE_LINKER__SimpleNesEmulator_Debug CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/6502.c.o CMakeFiles/SimpleNesEmulator.dir/src/emulation/emulate.c.o CMakeFiles/SimpleNesEmulator.dir/src/main.c.o
+build SimpleNesEmulator: C_EXECUTABLE_LINKER__SimpleNesEmulator_Debug CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/6502.c.o CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/cpu_bus.c.o CMakeFiles/SimpleNesEmulator.dir/src/emulation/emulate.c.o CMakeFiles/SimpleNesEmulator.dir/src/main.c.o
   FLAGS = -g
   OBJECT_DIR = CMakeFiles/SimpleNesEmulator.dir
   POST_BUILD = :
