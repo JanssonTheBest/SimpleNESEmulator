@@ -15,9 +15,9 @@ void cpu_step(cpu_6502 *cpu)
 {
     if (cpu->clock_count == 0)
     {
-        uint8_t value = cpu->cpu_bus->read_func(cpu->reg_pc);
+        uint8_t value = cpu->cpu_bus->read_func(cpu->reg_pc, cpu->cpu_bus);
         cpu->reg_pc++;
-        cpu->fetched = value;
+        cpu->temp = value;
         opcode opcode = opcode_table[value];
         opcode.addressing_mode(cpu);
         cpu->clock_count = opcode.base_cycle_count;
@@ -250,13 +250,13 @@ uint16_t pc_read_u16(cpu_6502 *cpu)
 {
     uint8_t lo = cpu->cpu_bus->read_func(cpu->reg_pc, cpu->cpu_bus);
     cpu->reg_pc++;
-    uint8_t hi = lo = cpu->cpu_bus->read_func(cpu->reg_pc, cpu->cpu_bus);
+    uint8_t hi = cpu->cpu_bus->read_func(cpu->reg_pc, cpu->cpu_bus);
     cpu->reg_pc++;
     uint16_t u16 = (hi << 8) | lo;
     return u16;
 }
 
-uint16_t pc_read_u8(cpu_6502 *cpu)
+uint8_t pc_read_u8(cpu_6502 *cpu)
 {
     uint8_t u8 = cpu->cpu_bus->read_func(cpu->reg_pc, cpu->cpu_bus);
     cpu->reg_pc++;
@@ -267,18 +267,16 @@ uint16_t pc_read_u8(cpu_6502 *cpu)
 void addressing_zero_page_indexed_x(cpu_6502 *cpu)
 {
     uint8_t arg = pc_read_u8(cpu);
-    cpu->reg_pc++;
     uint16_t effective_address = (arg + cpu->reg_x) & 0x00FF;
-    cpu->fetched = cpu->cpu_bus->read_func(effective_address, cpu->cpu_bus);
+    cpu->temp = cpu->cpu_bus->read_func(effective_address, cpu->cpu_bus);
     cpu->page_crossed = false;
 }
 // val = PEEK((arg + Y) % 256)
 void addressing_zero_page_indexed_y(cpu_6502 *cpu)
 {
     uint8_t arg = pc_read_u8(cpu);
-    cpu->reg_pc++;
     uint16_t effective_addr = (arg + cpu->reg_y) & 0x00FF;
-    cpu->fetched = cpu->cpu_bus->read_func(effective_addr, cpu->cpu_bus);
+    cpu->temp = cpu->cpu_bus->read_func(effective_addr, cpu->cpu_bus);
     cpu->page_crossed = false;
 }
 // val = PEEK(arg + X)
@@ -286,7 +284,7 @@ void addressing_absolute_indexed_x(cpu_6502 *cpu)
 {
     uint16_t arg = pc_read_u16(cpu);
     uint16_t effective_addr = (arg + cpu->reg_x);
-    cpu->fetched = cpu->cpu_bus->read_func(effective_addr, cpu->cpu_bus);
+    cpu->temp = cpu->cpu_bus->read_func(effective_addr, cpu->cpu_bus);
     cpu->page_crossed = ((effective_addr & 0xFF00) != (arg & 0xFF00));
 }
 // val = PEEK(arg + Y)
@@ -294,7 +292,7 @@ void addressing_absolute_indexed_y(cpu_6502 *cpu)
 {
     uint16_t arg = pc_read_u16(cpu);
     uint16_t effective_addr = (arg + cpu->reg_y);
-    cpu->fetched = cpu->cpu_bus->read_func(effective_addr, cpu->cpu_bus);
+    cpu->temp = cpu->cpu_bus->read_func(effective_addr, cpu->cpu_bus);
     cpu->page_crossed = ((effective_addr & 0xFF00) != (arg & 0xFF00));
 }
 // val = PEEK(PEEK((arg + X) % 256) + PEEK((arg + X + 1) % 256) * 256)
@@ -304,7 +302,7 @@ void addressing_indexed_indirect_x(cpu_6502 *cpu)
     uint8_t lo = cpu->cpu_bus->read_func((arg + cpu->reg_x) & 0x00FF, cpu->cpu_bus);
     uint8_t hi = cpu->cpu_bus->read_func((arg + cpu->reg_x + 0x0001) & 0x00FF, cpu->cpu_bus);
     uint16_t effective_addr = (hi << 8) | lo;
-    cpu->fetched = cpu->cpu_bus->read_func(effective_addr, cpu->cpu_bus);
+    cpu->temp = cpu->cpu_bus->read_func(effective_addr, cpu->cpu_bus);
     cpu->page_crossed = false;
 }
 // val = PEEK(PEEK(arg) + PEEK((arg + 1) % 256) * 256 + Y)
@@ -312,46 +310,77 @@ void addressing_indirect_indexed_y(cpu_6502 *cpu)
 {
     uint8_t val = pc_read_u8(cpu);
     uint8_t lo = cpu->cpu_bus->read_func(val, cpu->cpu_bus);
-    uint8_t hi = cpu->cpu_bus->read_func((val + 0x0001)&0x00FF, cpu->cpu_bus);
+    uint8_t hi = cpu->cpu_bus->read_func((val + 0x0001) & 0x00FF, cpu->cpu_bus);
     uint16_t arg = (hi << 8) | lo;
     uint16_t effective_addr = arg + cpu->reg_y;
-    cpu->fetched = cpu->cpu_bus->read_func(effective_addr, cpu->cpu_bus);
+    cpu->temp = cpu->cpu_bus->read_func(effective_addr, cpu->cpu_bus);
     cpu->page_crossed = ((effective_addr & 0xFF00) != (arg & 0xFF00));
 }
 // Many instructions can operate on the accumulator, e.g. LSR A. Some assemblers will treat no operand as an implicit A where applicable.
 void addressing_accumulator(cpu_6502 *cpu)
 {
+    cpu->temp = cpu->reg_a;
+    cpu->page_crossed = false;
 }
 // Uses the 8-bit operand itself as the value for the operation, rather than fetching a value from a memory address.
 void addressing_immediate(cpu_6502 *cpu)
 {
+    cpu->temp = pc_read_u8(cpu);
+    cpu->page_crossed = false;
 }
 // Fetches the value from an 8-bit address on the zero page.
 void addressing_zero_page(cpu_6502 *cpu)
 {
+    uint8_t arg = pc_read_u8(cpu);
+    uint16_t effective_address = arg & 0x00FF;
+    cpu->temp = cpu->cpu_bus->read_func(effective_address, cpu->cpu_bus);
+    cpu->page_crossed = false;
 }
 // Fetches the value from a 16-bit address anywhere in memory.
 void addressing_absolute(cpu_6502 *cpu)
 {
+    uint16_t arg = pc_read_u16(cpu);
+    cpu->temp = cpu->cpu_bus->read_func(arg, cpu->cpu_bus);
+    cpu->page_crossed = false;
 }
 // Branch instructions (e.g. BEQ, BCS) have a relative addressing mode that specifies an 8-bit signed offset relative to the current PC.
 void addressing_relative(cpu_6502 *cpu)
 {
+    int8_t offset = (int8_t)pc_read_u8(cpu);
+    cpu->temp = cpu->reg_pc + offset;
+    cpu->page_crossed = false;
 }
 // The JMP instruction has a special indirect addressing mode that can jump to the address stored in a 16-bit pointer anywhere in memory.
 void addressing_indirect(cpu_6502 *cpu)
 {
+    uint8_t arg = pc_read_u16(cpu);
+    uint8_t lo = cpu->cpu_bus->read_func(arg, cpu->cpu_bus);
+    uint8_t hi = cpu->cpu_bus->read_func((arg & 0xFF00) | ((arg + 1) & 0x00FF), cpu->cpu_bus);
+    cpu->temp = (hi << 8) | lo;
+    cpu->page_crossed = false;
 }
 // Instructions like RTS or CLC have no address operand, the destination of results are implied.
 void addressing_implied(cpu_6502 *cpu)
 {
     // Do nothing
+    cpu->temp = 0;
+    cpu->page_crossed = false;
 }
 //
 
 // Add with Carry: A = A + memory + C
 uint8_t adc(cpu_6502 *cpu)
 {
+    //No wrap around since we make use of more bits,
+    uint32_t wraparound_comparison = cpu->reg_a + cpu->temp + cpu->flag_carry;
+    cpu->reg_a = (uint8_t)wraparound_comparison;
+    cpu->flag_zero = 0;
+    //If not equal the reg_a 8 bit has wrapped around
+    if (wraparound_comparison != cpu->reg_a)
+    {
+        cpu->flag_carry = wrapped
+    }
+    cpu->flag_negative =
 }
 // Bitwise AND: A = A & memory
 uint8_t and(cpu_6502 *cpu)

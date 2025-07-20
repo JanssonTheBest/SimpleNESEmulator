@@ -1,9 +1,9 @@
 [
 {
   "directory": "/home/kwisty/repos/SimpleNESEmulator/build",
-  "command": "/usr/bin/gcc -I/home/kwisty/repos/SimpleNESEmulator/include -g -o CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/6502.c.o -c /home/kwisty/repos/SimpleNESEmulator/src/core/cpu/6502.c",
-  "file": "/home/kwisty/repos/SimpleNESEmulator/src/core/cpu/6502.c",
-  "output": "CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/6502.c.o"
+  "command": "/usr/bin/gcc -I/home/kwisty/repos/SimpleNESEmulator/include -g -o CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/cpu_6502.c.o -c /home/kwisty/repos/SimpleNESEmulator/src/core/cpu/cpu_6502.c",
+  "file": "/home/kwisty/repos/SimpleNESEmulator/src/core/cpu/cpu_6502.c",
+  "output": "CMakeFiles/SimpleNesEmulator.dir/src/core/cpu/cpu_6502.c.o"
 },
 {
   "directory": "/home/kwisty/repos/SimpleNESEmulator/build",

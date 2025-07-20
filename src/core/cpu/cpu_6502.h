@@ -24,7 +24,7 @@ typedef struct
     cpu_bus *cpu_bus;
     
     uint8_t clock_count;
-    uint8_t fetched;
+    uint8_t temp;
     bool page_crossed;
 
     void (*cpu_step_func)(cpu_6502*);
